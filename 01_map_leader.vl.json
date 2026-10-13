@@ -1,0 +1,330 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Map 1 - Categorical choropleth: the most-used phone brand in every country (StatCounter, Oct 2025 - Sep 2026 average).",
+  "width": 980,
+  "height": 470,
+  "projection": {
+    "type": "equalEarth"
+  },
+  "layer": [
+    {
+      "data": {
+        "sphere": true
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e9eef1",
+        "stroke": "#cfd8de",
+        "strokeWidth": 0.6
+      }
+    },
+    {
+      "data": {
+        "graticule": {
+          "step": [
+            30,
+            30
+          ]
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": null,
+        "stroke": "#d6dfe5",
+        "strokeWidth": 0.5
+      }
+    },
+    {
+      "data": {
+        "url": "data/countries-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.id !== '010'"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#dcd8cf",
+        "stroke": "#ffffff",
+        "strokeWidth": 0.4
+      },
+      "encoding": {
+        "tooltip": {
+          "value": "No data"
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "data/countries-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.id !== '010'"
+        },
+        {
+          "lookup": "id",
+          "from": {
+            "data": {
+              "url": "data/world_phones.json"
+            },
+            "key": "id",
+            "fields": [
+              "country",
+              "leader",
+              "leaderRaw",
+              "leaderShare",
+              "second",
+              "secondShare",
+              "apple",
+              "samsung"
+            ]
+          }
+        },
+        {
+          "filter": "isValid(datum.leader)"
+        }
+      ],
+      "params": [
+        {
+          "name": "pickBrand",
+          "select": {
+            "type": "point",
+            "fields": [
+              "leader"
+            ]
+          },
+          "bind": "legend"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#ffffff",
+        "strokeWidth": 0.4,
+        "cursor": "pointer"
+      },
+      "encoding": {
+        "color": {
+          "field": "leader",
+          "type": "nominal",
+          "title": "Most-used phone brand (click to highlight)",
+          "scale": {
+            "domain": [
+              "Apple",
+              "Samsung",
+              "Xiaomi",
+              "Tecno",
+              "Infinix",
+              "Vivo",
+              "Oppo"
+            ],
+            "range": [
+              "#2f3237",
+              "#1f4fd1",
+              "#ff6a13",
+              "#0f9d9a",
+              "#6fcfbf",
+              "#41a6e8",
+              "#129a6b"
+            ]
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "columns": 7,
+            "symbolType": "square",
+            "symbolSize": 160
+          }
+        },
+        "opacity": {
+          "condition": {
+            "param": "pickBrand",
+            "value": 1
+          },
+          "value": 0.15
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Country"
+          },
+          {
+            "field": "leaderRaw",
+            "title": "No. 1 brand"
+          },
+          {
+            "field": "leaderShare",
+            "title": "No. 1 share (%)",
+            "format": ".1f"
+          },
+          {
+            "field": "second",
+            "title": "No. 2 brand"
+          },
+          {
+            "field": "secondShare",
+            "title": "No. 2 share (%)",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "lon": 134,
+            "lat": -25,
+            "tlon": 150,
+            "tlat": -45,
+            "label": "Australia: Apple 61%"
+          },
+          {
+            "lon": 78,
+            "lat": 22,
+            "tlon": 65,
+            "tlat": 2,
+            "label": "India: Vivo leads with only 18%"
+          },
+          {
+            "lon": 8,
+            "lat": 9,
+            "tlon": -22,
+            "tlat": -2,
+            "label": "Nigeria: Tecno 19%"
+          },
+          {
+            "lon": 127.8,
+            "lat": 36.5,
+            "tlon": 150,
+            "tlat": 48,
+            "label": "South Korea: Samsung 56%"
+          },
+          {
+            "lon": -98,
+            "lat": 40,
+            "tlon": -128,
+            "tlat": 22,
+            "label": "USA: Apple 60%"
+          },
+          {
+            "lon": -53,
+            "lat": -10,
+            "tlon": -75,
+            "tlat": -38,
+            "label": "Brazil: Samsung 30%"
+          },
+          {
+            "lon": 104,
+            "lat": 35,
+            "tlon": 112,
+            "tlat": 62,
+            "label": "China: Apple 27%, local brands share the rest"
+          }
+        ]
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "rule",
+            "color": "#1b1f24",
+            "strokeWidth": 0.8
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "longitude2": {
+              "field": "tlon"
+            },
+            "latitude2": {
+              "field": "tlat"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "circle",
+            "size": 24,
+            "color": "#ffffff",
+            "stroke": "#1b1f24",
+            "strokeWidth": 1,
+            "opacity": 1
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 600,
+            "stroke": "#ffffff",
+            "strokeWidth": 3.5,
+            "strokeJoin": "round",
+            "align": "center",
+            "dy": -7
+          },
+          "encoding": {
+            "longitude": {
+              "field": "tlon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "tlat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 11.5,
+            "fontWeight": 600,
+            "color": "#1b1f24",
+            "align": "center",
+            "dy": -7
+          },
+          "encoding": {
+            "longitude": {
+              "field": "tlon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "tlat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

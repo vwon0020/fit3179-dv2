@@ -1,0 +1,288 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "description": "Chart 5 - Ridgeline plot: monthly share of phones in use in Australia for the ten challenger brands behind Apple and Samsung, Jan 2012 - Sep 2026 (StatCounter). Each ridge is drawn on the same scale; peaks above 12% are clipped (see tooltip).",
+ "data": {
+  "url": "data/brand_share_monthly.csv",
+  "format": {
+   "type": "csv",
+   "parse": {
+    "share": "number"
+   }
+  }
+ },
+ "transform": [
+  {
+   "filter": "datum.region === 'Australia' && indexof(['Apple','Samsung','Other'], datum.brand) < 0"
+  },
+  {
+   "calculate": "toDate(datum.date + '-01')",
+   "as": "month"
+  },
+  {
+   "joinaggregate": [
+    {
+     "op": "max",
+     "field": "share",
+     "as": "peak"
+    }
+   ],
+   "groupby": [
+    "brand"
+   ]
+  },
+  {
+   "calculate": "datum.share === datum.peak",
+   "as": "isPeak"
+  },
+  {
+   "calculate": "'Peak ' + format(datum.peak, '.1f') + '% (' + timeFormat(datum.month, '%b %Y') + ')' + (datum.peak > 12 ? ', clipped' : '')",
+   "as": "label"
+  }
+ ],
+ "facet": {
+  "row": {
+   "field": "brand",
+   "type": "nominal",
+   "sort": [
+    "HTC",
+    "Nokia",
+    "Sony",
+    "LG",
+    "Huawei",
+    "Oppo",
+    "Xiaomi",
+    "Vivo",
+    "Motorola",
+    "Google"
+   ],
+   "title": null,
+   "header": {
+    "labels": false
+   }
+  }
+ },
+ "spacing": 0,
+ "bounds": "flush",
+ "spec": {
+  "width": 780,
+  "height": 34,
+  "layer": [
+   {
+    "mark": {
+     "type": "area",
+     "interpolate": "monotone",
+     "fillOpacity": 0.88,
+     "stroke": "#ffffff",
+     "strokeWidth": 1,
+     "clip": false
+    },
+    "encoding": {
+     "x": {
+      "field": "month",
+      "type": "temporal",
+      "title": null,
+      "axis": {
+       "grid": false,
+       "format": "%Y",
+       "tickCount": 15,
+       "domain": false,
+       "labelFontSize": 11.5
+      }
+     },
+     "y": {
+      "field": "share",
+      "type": "quantitative",
+      "scale": {
+       "domain": [
+        0,
+        12
+       ],
+       "range": [
+        34,
+        -46
+       ],
+       "clamp": true
+      },
+      "axis": null
+     },
+     "color": {
+      "field": "brand",
+      "type": "nominal",
+      "legend": null,
+      "scale": {
+       "domain": [
+        "Google",
+        "Oppo",
+        "Motorola",
+        "Huawei",
+        "Xiaomi",
+        "Vivo",
+        "HTC",
+        "Sony",
+        "Nokia",
+        "LG"
+       ],
+       "range": [
+        "#e3a008",
+        "#129a6b",
+        "#7b4fc9",
+        "#c8102e",
+        "#ff6a13",
+        "#41a6e8",
+        "#a07850",
+        "#8a94a6",
+        "#5d8c7a",
+        "#b06a85"
+       ]
+      }
+     },
+     "opacity": {
+      "condition": {
+       "param": "ridgeHover",
+       "empty": true,
+       "value": 1
+      },
+      "value": 0.25
+     },
+     "tooltip": [
+      {
+       "field": "brand",
+       "title": "Brand"
+      },
+      {
+       "field": "month",
+       "type": "temporal",
+       "title": "Month",
+       "format": "%b %Y"
+      },
+      {
+       "field": "share",
+       "title": "Share of phones (%)",
+       "format": ".1f"
+      },
+      {
+       "field": "peak",
+       "title": "Highest ever (%)",
+       "format": ".1f"
+      }
+     ]
+    },
+    "params": [
+     {
+      "name": "ridgeHover",
+      "select": {
+       "type": "point",
+       "fields": [
+        "brand"
+       ],
+       "on": "mouseover",
+       "clear": "mouseout"
+      }
+     }
+    ]
+   },
+   {
+    "transform": [
+     {
+      "filter": "datum.isPeak && datum.peak >= 3 && year(datum.month) < 2023"
+     }
+    ],
+    "mark": {
+     "type": "text",
+     "align": "left",
+     "dx": 6,
+     "dy": -2,
+     "fontSize": 11,
+     "fontWeight": 600,
+     "color": "#1b1f24"
+    },
+    "encoding": {
+     "x": {
+      "field": "month",
+      "type": "temporal"
+     },
+     "y": {
+      "field": "share",
+      "type": "quantitative"
+     },
+     "text": {
+      "field": "label"
+     }
+    }
+   },
+   {
+    "transform": [
+     {
+      "filter": "datum.isPeak && datum.peak >= 3 && year(datum.month) >= 2023"
+     }
+    ],
+    "mark": {
+     "type": "text",
+     "align": "right",
+     "dx": -8,
+     "dy": -2,
+     "fontSize": 11,
+     "fontWeight": 600,
+     "color": "#1b1f24"
+    },
+    "encoding": {
+     "x": {
+      "field": "month",
+      "type": "temporal"
+     },
+     "y": {
+      "field": "share",
+      "type": "quantitative"
+     },
+     "text": {
+      "field": "label"
+     }
+    }
+   },
+   {
+    "transform": [
+     {
+      "aggregate": [
+       {
+        "op": "min",
+        "field": "month",
+        "as": "month"
+       }
+      ],
+      "groupby": [
+       "brand"
+      ]
+     }
+    ],
+    "mark": {
+     "type": "text",
+     "align": "right",
+     "baseline": "bottom",
+     "dx": -10,
+     "dy": -2,
+     "fontSize": 13,
+     "fontWeight": 700,
+     "color": "#1b1f24"
+    },
+    "encoding": {
+     "x": {
+      "field": "month",
+      "type": "temporal"
+     },
+     "y": {
+      "value": 34
+     },
+     "text": {
+      "field": "brand"
+     }
+    }
+   }
+  ]
+ },
+ "padding": {
+  "left": 80,
+  "top": 50,
+  "right": 10,
+  "bottom": 5
+ }
+}

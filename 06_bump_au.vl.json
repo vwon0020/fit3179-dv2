@@ -1,0 +1,204 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "description": "Chart 6 - Bump chart: yearly popularity ranking of phone brands in Australia, 2012-2026 (rank of average yearly share, StatCounter). Hover a line to follow a brand.",
+ "width": 880,
+ "height": 330,
+ "data": {
+  "url": "data/brand_share_monthly.csv",
+  "format": {
+   "type": "csv",
+   "parse": {
+    "share": "number"
+   }
+  }
+ },
+ "transform": [
+  {
+   "filter": "datum.region === 'Australia' && datum.brand !== 'Other'"
+  },
+  {
+   "calculate": "toNumber(substring(datum.date, 0, 4))",
+   "as": "year"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "mean",
+     "field": "share",
+     "as": "share"
+    }
+   ],
+   "groupby": [
+    "year",
+    "brand"
+   ]
+  },
+  {
+   "window": [
+    {
+     "op": "row_number",
+     "as": "rank"
+    }
+   ],
+   "sort": [
+    {
+     "field": "share",
+     "order": "descending"
+    }
+   ],
+   "groupby": [
+    "year"
+   ]
+  },
+  {
+   "filter": "datum.rank <= 8"
+  }
+ ],
+ "encoding": {
+  "x": {
+   "field": "year",
+   "type": "ordinal",
+   "title": null,
+   "axis": {
+    "labelAngle": 0,
+    "domain": false,
+    "ticks": false,
+    "labelPadding": 8
+   }
+  },
+  "y": {
+   "field": "rank",
+   "type": "ordinal",
+   "title": "Rank in Australia",
+   "axis": {
+    "domain": false,
+    "ticks": false,
+    "labelExpr": "'#' + datum.label"
+   }
+  },
+  "color": {
+   "field": "brand",
+   "type": "nominal",
+   "legend": null,
+   "scale": {
+    "domain": [
+     "Apple",
+     "Samsung",
+     "Google",
+     "Oppo",
+     "Motorola",
+     "Huawei",
+     "Xiaomi",
+     "Vivo",
+     "HTC",
+     "Sony",
+     "Nokia",
+     "LG",
+     "ZTE",
+     "Lenovo",
+     "Alcatel",
+     "Realme",
+     "OnePlus"
+    ],
+    "range": [
+     "#2f3237",
+     "#1f4fd1",
+     "#e3a008",
+     "#129a6b",
+     "#7b4fc9",
+     "#c8102e",
+     "#ff6a13",
+     "#41a6e8",
+     "#a07850",
+     "#8a94a6",
+     "#5d8c7a",
+     "#b06a85",
+     "#999999",
+     "#9d9d6e",
+     "#999999",
+     "#9c8b2e",
+     "#8f2d56"
+    ]
+   }
+  },
+  "opacity": {
+   "condition": {
+    "param": "bumpHover",
+    "empty": true,
+    "value": 1
+   },
+   "value": 0.12
+  }
+ },
+ "layer": [
+  {
+   "mark": {
+    "type": "line",
+    "strokeWidth": 3.5,
+    "interpolate": "monotone"
+   }
+  },
+  {
+   "mark": {
+    "type": "circle",
+    "size": 120,
+    "stroke": "#ffffff",
+    "strokeWidth": 1.5,
+    "opacity": 1
+   },
+   "encoding": {
+    "tooltip": [
+     {
+      "field": "year",
+      "title": "Year"
+     },
+     {
+      "field": "brand",
+      "title": "Brand"
+     },
+     {
+      "field": "rank",
+      "title": "Rank"
+     },
+     {
+      "field": "share",
+      "title": "Average share of phones (%)",
+      "format": ".1f"
+     }
+    ]
+   },
+   "params": [
+    {
+     "name": "bumpHover",
+     "select": {
+      "type": "point",
+      "fields": [
+       "brand"
+      ],
+      "on": "mouseover",
+      "clear": "mouseout"
+     }
+    }
+   ]
+  },
+  {
+   "transform": [
+    {
+     "filter": "datum.year === 2026"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 12,
+    "fontSize": 12,
+    "fontWeight": 600
+   },
+   "encoding": {
+    "text": {
+     "field": "brand"
+    }
+   }
+  }
+ ]
+}

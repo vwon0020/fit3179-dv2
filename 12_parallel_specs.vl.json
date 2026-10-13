@@ -1,0 +1,467 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "description": "Chart 12 - Parallel coordinates: the median phone of each brand across seven specifications (Mobiles Dataset 2025). Each axis runs from the lowest to the highest brand median. Use the menu to highlight a brand.",
+ "width": 900,
+ "height": 330,
+ "data": {
+  "url": "data/phones_specs.csv",
+  "format": {
+   "type": "csv",
+   "parse": {
+    "year": "number",
+    "weight_g": "number",
+    "ram_gb": "number",
+    "front_mp": "number",
+    "main_mp": "number",
+    "battery_mah": "number",
+    "screen_in": "number",
+    "price_usd": "number"
+   }
+  }
+ },
+ "params": [
+  {
+   "name": "pick",
+   "value": "Apple",
+   "bind": {
+    "input": "select",
+    "name": "Highlight brand: ",
+    "options": [
+     "Apple",
+     "Samsung",
+     "Google",
+     "Oppo",
+     "Motorola",
+     "Xiaomi",
+     "Vivo",
+     "Honor",
+     "Realme",
+     "OnePlus",
+     "Huawei",
+     "Tecno",
+     "Infinix",
+     "Sony",
+     "Nokia",
+     "Lenovo"
+    ]
+   }
+  }
+ ],
+ "transform": [
+  {
+   "aggregate": [
+    {
+     "op": "median",
+     "field": "price_usd",
+     "as": "Price (US$)"
+    },
+    {
+     "op": "median",
+     "field": "battery_mah",
+     "as": "Battery (mAh)"
+    },
+    {
+     "op": "median",
+     "field": "screen_in",
+     "as": "Screen (inches)"
+    },
+    {
+     "op": "median",
+     "field": "ram_gb",
+     "as": "Memory (GB RAM)"
+    },
+    {
+     "op": "median",
+     "field": "main_mp",
+     "as": "Main camera (MP)"
+    },
+    {
+     "op": "median",
+     "field": "front_mp",
+     "as": "Selfie camera (MP)"
+    },
+    {
+     "op": "median",
+     "field": "weight_g",
+     "as": "Weight (g)"
+    },
+    {
+     "op": "count",
+     "as": "models"
+    }
+   ],
+   "groupby": [
+    "brand"
+   ]
+  },
+  {
+   "fold": [
+    "Price (US$)",
+    "Battery (mAh)",
+    "Screen (inches)",
+    "Memory (GB RAM)",
+    "Main camera (MP)",
+    "Selfie camera (MP)",
+    "Weight (g)"
+   ],
+   "as": [
+    "spec",
+    "value"
+   ]
+  },
+  {
+   "joinaggregate": [
+    {
+     "op": "min",
+     "field": "value",
+     "as": "min"
+    },
+    {
+     "op": "max",
+     "field": "value",
+     "as": "max"
+    }
+   ],
+   "groupby": [
+    "spec"
+   ]
+  },
+  {
+   "calculate": "(datum.value - datum.min) / (datum.max - datum.min)",
+   "as": "norm"
+  }
+ ],
+ "layer": [
+  {
+   "mark": {
+    "type": "rule",
+    "color": "#b9b3a6",
+    "strokeWidth": 1
+   },
+   "encoding": {
+    "x": {
+     "field": "spec",
+     "type": "nominal",
+     "sort": [
+      "Price (US$)",
+      "Battery (mAh)",
+      "Screen (inches)",
+      "Memory (GB RAM)",
+      "Main camera (MP)",
+      "Selfie camera (MP)",
+      "Weight (g)"
+     ]
+    }
+   }
+  },
+  {
+   "mark": {
+    "type": "line",
+    "interpolate": "linear"
+   },
+   "encoding": {
+    "x": {
+     "field": "spec",
+     "type": "nominal",
+     "sort": [
+      "Price (US$)",
+      "Battery (mAh)",
+      "Screen (inches)",
+      "Memory (GB RAM)",
+      "Main camera (MP)",
+      "Selfie camera (MP)",
+      "Weight (g)"
+     ],
+     "title": null,
+     "axis": {
+      "orient": "top",
+      "domain": false,
+      "ticks": false,
+      "labelAngle": 0,
+      "labelFontWeight": 700,
+      "labelFontSize": 12,
+      "labelPadding": 10
+     }
+    },
+    "y": {
+     "field": "norm",
+     "type": "quantitative",
+     "axis": null
+    },
+    "detail": {
+     "field": "brand"
+    },
+    "color": {
+     "value": "#c4beb1"
+    },
+    "strokeWidth": {
+     "value": 1.3
+    },
+    "opacity": {
+     "value": 0.75
+    },
+    "tooltip": [
+     {
+      "field": "brand",
+      "title": "Brand"
+     },
+     {
+      "field": "spec",
+      "title": "Spec"
+     },
+     {
+      "field": "value",
+      "title": "Median value",
+      "format": ",.4~f"
+     },
+     {
+      "field": "models",
+      "title": "Models"
+     }
+    ]
+   }
+  },
+  {
+   "mark": {
+    "type": "line",
+    "color": "#e0601f",
+    "strokeWidth": 4
+   },
+   "encoding": {
+    "x": {
+     "field": "spec",
+     "type": "nominal",
+     "sort": [
+      "Price (US$)",
+      "Battery (mAh)",
+      "Screen (inches)",
+      "Memory (GB RAM)",
+      "Main camera (MP)",
+      "Selfie camera (MP)",
+      "Weight (g)"
+     ],
+     "title": null,
+     "axis": {
+      "orient": "top",
+      "domain": false,
+      "ticks": false,
+      "labelAngle": 0,
+      "labelFontWeight": 700,
+      "labelFontSize": 12,
+      "labelPadding": 10
+     }
+    },
+    "y": {
+     "field": "norm",
+     "type": "quantitative",
+     "axis": null
+    },
+    "detail": {
+     "field": "brand"
+    },
+    "tooltip": [
+     {
+      "field": "brand",
+      "title": "Brand"
+     },
+     {
+      "field": "spec",
+      "title": "Spec"
+     },
+     {
+      "field": "value",
+      "title": "Median value",
+      "format": ",.4~f"
+     },
+     {
+      "field": "models",
+      "title": "Models"
+     }
+    ]
+   },
+   "transform": [
+    {
+     "filter": "datum.brand === pick"
+    }
+   ]
+  },
+  {
+   "transform": [
+    {
+     "filter": "datum.brand === pick"
+    }
+   ],
+   "mark": {
+    "type": "circle",
+    "size": 70,
+    "color": "#e0601f",
+    "stroke": "#ffffff",
+    "strokeWidth": 1.5
+   },
+   "encoding": {
+    "x": {
+     "field": "spec",
+     "type": "nominal",
+     "sort": [
+      "Price (US$)",
+      "Battery (mAh)",
+      "Screen (inches)",
+      "Memory (GB RAM)",
+      "Main camera (MP)",
+      "Selfie camera (MP)",
+      "Weight (g)"
+     ]
+    },
+    "y": {
+     "field": "norm",
+     "type": "quantitative"
+    },
+    "tooltip": [
+     {
+      "field": "brand",
+      "title": "Brand"
+     },
+     {
+      "field": "spec",
+      "title": "Spec"
+     },
+     {
+      "field": "value",
+      "title": "Median value",
+      "format": ",.4~f"
+     }
+    ]
+   }
+  },
+  {
+   "transform": [
+    {
+     "filter": "datum.brand === pick"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "right",
+    "dx": -9,
+    "fontSize": 12,
+    "fontWeight": 700,
+    "color": "#b4440f"
+   },
+   "encoding": {
+    "x": {
+     "field": "spec",
+     "type": "nominal",
+     "sort": [
+      "Price (US$)",
+      "Battery (mAh)",
+      "Screen (inches)",
+      "Memory (GB RAM)",
+      "Main camera (MP)",
+      "Selfie camera (MP)",
+      "Weight (g)"
+     ]
+    },
+    "y": {
+     "field": "norm",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "value",
+     "type": "quantitative",
+     "format": ",.4~f"
+    }
+   }
+  },
+  {
+   "transform": [
+    {
+     "aggregate": [
+      {
+       "op": "max",
+       "field": "max",
+       "as": "max"
+      },
+      {
+       "op": "min",
+       "field": "min",
+       "as": "min"
+      }
+     ],
+     "groupby": [
+      "spec"
+     ]
+    }
+   ],
+   "layer": [
+    {
+     "mark": {
+      "type": "text",
+      "align": "left",
+      "baseline": "top",
+      "dx": 5,
+      "dy": 2,
+      "fontSize": 10.5,
+      "color": "#8a8578"
+     },
+     "encoding": {
+      "x": {
+       "field": "spec",
+       "type": "nominal",
+       "sort": [
+        "Price (US$)",
+        "Battery (mAh)",
+        "Screen (inches)",
+        "Memory (GB RAM)",
+        "Main camera (MP)",
+        "Selfie camera (MP)",
+        "Weight (g)"
+       ]
+      },
+      "y": {
+       "value": 0
+      },
+      "text": {
+       "field": "max",
+       "type": "quantitative",
+       "format": ",.4~f"
+      }
+     }
+    },
+    {
+     "mark": {
+      "type": "text",
+      "align": "left",
+      "baseline": "bottom",
+      "dx": 5,
+      "dy": -2,
+      "fontSize": 10.5,
+      "color": "#8a8578"
+     },
+     "encoding": {
+      "x": {
+       "field": "spec",
+       "type": "nominal",
+       "sort": [
+        "Price (US$)",
+        "Battery (mAh)",
+        "Screen (inches)",
+        "Memory (GB RAM)",
+        "Main camera (MP)",
+        "Selfie camera (MP)",
+        "Weight (g)"
+       ]
+      },
+      "y": {
+       "value": 330
+      },
+      "text": {
+       "field": "min",
+       "type": "quantitative",
+       "format": ",.4~f"
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

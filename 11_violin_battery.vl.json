@@ -1,0 +1,171 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "description": "Chart 11 - Violin plot: distribution of battery capacity of new phone models by launch year, 2019-2024 (Mobiles Dataset 2025). Wider = more models with that capacity.",
+ "data": {
+  "url": "data/phones_specs.csv",
+  "format": {
+   "type": "csv",
+   "parse": {
+    "year": "number",
+    "weight_g": "number",
+    "ram_gb": "number",
+    "front_mp": "number",
+    "main_mp": "number",
+    "battery_mah": "number",
+    "screen_in": "number",
+    "price_usd": "number"
+   }
+  }
+ },
+ "transform": [
+  {
+   "filter": "datum.year >= 2019 && datum.year <= 2024"
+  },
+  {
+   "joinaggregate": [
+    {
+     "op": "median",
+     "field": "battery_mah",
+     "as": "median"
+    },
+    {
+     "op": "count",
+     "as": "models"
+    }
+   ],
+   "groupby": [
+    "year"
+   ]
+  },
+  {
+   "density": "battery_mah",
+   "groupby": [
+    "year",
+    "median",
+    "models"
+   ],
+   "extent": [
+    2000,
+    7000
+   ],
+   "bandwidth": 220,
+   "steps": 120,
+   "as": [
+    "battery_mah",
+    "density"
+   ]
+  }
+ ],
+ "facet": {
+  "column": {
+   "field": "year",
+   "type": "ordinal",
+   "title": null,
+   "header": {
+    "labelOrient": "bottom",
+    "labelFontSize": 13,
+    "labelFontWeight": 700,
+    "labelColor": "#1b1f24"
+   }
+  }
+ },
+ "spacing": 0,
+ "spec": {
+  "width": 95,
+  "height": 300,
+  "layer": [
+   {
+    "mark": {
+     "type": "area",
+     "orient": "horizontal",
+     "color": "#e0601f",
+     "opacity": 0.85,
+     "interpolate": "monotone"
+    },
+    "encoding": {
+     "y": {
+      "field": "battery_mah",
+      "type": "quantitative",
+      "title": "Battery capacity (mAh)",
+      "scale": {
+       "domain": [
+        2000,
+        7000
+       ]
+      },
+      "axis": {
+       "format": ",d",
+       "values": [
+        2000,
+        3000,
+        4000,
+        5000,
+        6000,
+        7000
+       ]
+      }
+     },
+     "x": {
+      "field": "density",
+      "type": "quantitative",
+      "stack": "center",
+      "impute": null,
+      "title": null,
+      "axis": null
+     },
+     "tooltip": [
+      {
+       "field": "year",
+       "title": "Launch year"
+      },
+      {
+       "field": "models",
+       "title": "Models in dataset"
+      },
+      {
+       "field": "median",
+       "title": "Median battery (mAh)",
+       "format": ",d"
+      }
+     ]
+    }
+   },
+   {
+    "transform": [
+     {
+      "aggregate": [
+       {
+        "op": "max",
+        "field": "median",
+        "as": "median"
+       }
+      ],
+      "groupby": [
+       "year"
+      ]
+     }
+    ],
+    "mark": {
+     "type": "tick",
+     "color": "#1b1f24",
+     "thickness": 2,
+     "size": 40
+    },
+    "encoding": {
+     "y": {
+      "field": "median",
+      "type": "quantitative"
+     },
+     "x": {
+      "value": 47.5
+     }
+    }
+   }
+  ]
+ },
+ "resolve": {
+  "scale": {
+   "x": "independent"
+  }
+ }
+}

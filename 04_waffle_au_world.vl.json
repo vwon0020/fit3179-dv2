@@ -1,0 +1,247 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "description": "Chart 4 - Waffle (unit) chart small multiples: 100 phone glyphs per region, coloured by brand. Average share Oct 2025 - Sep 2026 (StatCounter).",
+ "data": {
+  "url": "data/brand_share_monthly.csv",
+  "format": {
+   "type": "csv",
+   "parse": {
+    "share": "number"
+   }
+  }
+ },
+ "transform": [
+  {
+   "filter": "datum.date >= '2025-10'"
+  },
+  {
+   "calculate": "indexof(['Apple','Samsung','Google','Xiaomi','Oppo','Vivo','Motorola'], datum.brand) >= 0 ? datum.brand : 'All other brands'",
+   "as": "brandGroup"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "mean",
+     "field": "share",
+     "as": "avgShare"
+    }
+   ],
+   "groupby": [
+    "region",
+    "brand",
+    "brandGroup",
+    "date"
+   ]
+  },
+  {
+   "aggregate": [
+    {
+     "op": "sum",
+     "field": "avgShare",
+     "as": "monthShare"
+    }
+   ],
+   "groupby": [
+    "region",
+    "brandGroup",
+    "date"
+   ]
+  },
+  {
+   "aggregate": [
+    {
+     "op": "mean",
+     "field": "monthShare",
+     "as": "share"
+    }
+   ],
+   "groupby": [
+    "region",
+    "brandGroup"
+   ]
+  },
+  {
+   "calculate": "indexof(['Apple','Samsung','Google','Xiaomi','Oppo','Vivo','Motorola','All other brands'], datum.brandGroup)",
+   "as": "ord"
+  },
+  {
+   "calculate": "round(datum.share)",
+   "as": "units"
+  },
+  {
+   "joinaggregate": [
+    {
+     "op": "sum",
+     "field": "units",
+     "as": "total"
+    }
+   ],
+   "groupby": [
+    "region"
+   ]
+  },
+  {
+   "calculate": "datum.brandGroup === 'All other brands' ? datum.units + 100 - datum.total : datum.units",
+   "as": "units"
+  },
+  {
+   "window": [
+    {
+     "op": "sum",
+     "field": "units",
+     "as": "cum"
+    }
+   ],
+   "sort": [
+    {
+     "field": "ord"
+    }
+   ],
+   "groupby": [
+    "region"
+   ]
+  },
+  {
+   "calculate": "sequence(datum.cum - datum.units, datum.cum)",
+   "as": "cell"
+  },
+  {
+   "flatten": [
+    "cell"
+   ]
+  },
+  {
+   "calculate": "datum.cell % 10",
+   "as": "col"
+  },
+  {
+   "calculate": "floor(datum.cell / 10)",
+   "as": "row"
+  }
+ ],
+ "params": [
+  {
+   "name": "hoverBrand",
+   "select": {
+    "type": "point",
+    "fields": [
+     "brandGroup"
+    ],
+    "on": "mouseover",
+    "clear": "mouseout"
+   }
+  }
+ ],
+ "facet": {
+  "column": {
+   "field": "region",
+   "type": "nominal",
+   "sort": [
+    "Australia",
+    "World"
+   ],
+   "title": null,
+   "header": {
+    "labelExpr": "datum.value === 'World' ? '100 phones worldwide' : '100 phones in Australia'",
+    "labelFontSize": 15,
+    "labelFontWeight": 700,
+    "labelColor": "#1b1f24",
+    "labelAnchor": "start"
+   }
+  }
+ },
+ "spacing": 56,
+ "spec": {
+  "width": 260,
+  "height": 300,
+  "mark": {
+   "type": "point",
+   "filled": true,
+   "size": 330,
+   "shape": "M-0.55,-1 L0.55,-1 Q0.72,-1 0.72,-0.83 L0.72,0.83 Q0.72,1 0.55,1 L-0.55,1 Q-0.72,1 -0.72,0.83 L-0.72,-0.83 Q-0.72,-1 -0.55,-1 Z",
+   "cursor": "pointer"
+  },
+  "encoding": {
+   "x": {
+    "field": "col",
+    "type": "ordinal",
+    "axis": null
+   },
+   "y": {
+    "field": "row",
+    "type": "ordinal",
+    "axis": null
+   },
+   "color": {
+    "field": "brandGroup",
+    "type": "nominal",
+    "title": "Brand",
+    "sort": [
+     "Apple",
+     "Samsung",
+     "Google",
+     "Xiaomi",
+     "Oppo",
+     "Vivo",
+     "Motorola",
+     "All other brands"
+    ],
+    "scale": {
+     "domain": [
+      "Apple",
+      "Samsung",
+      "Google",
+      "Xiaomi",
+      "Oppo",
+      "Vivo",
+      "Motorola",
+      "All other brands"
+     ],
+     "range": [
+      "#2f3237",
+      "#1f4fd1",
+      "#e3a008",
+      "#ff6a13",
+      "#129a6b",
+      "#41a6e8",
+      "#7b4fc9",
+      "#cfc9bc"
+     ]
+    },
+    "legend": {
+     "orient": "right",
+     "symbolType": "square",
+     "symbolSize": 180,
+     "labelFontSize": 12.5
+    }
+   },
+   "opacity": {
+    "condition": {
+     "param": "hoverBrand",
+     "empty": true,
+     "value": 1
+    },
+    "value": 0.18
+   },
+   "tooltip": [
+    {
+     "field": "region",
+     "title": "Where"
+    },
+    {
+     "field": "brandGroup",
+     "title": "Brand"
+    },
+    {
+     "field": "share",
+     "title": "Share of phones (%)",
+     "format": ".1f"
+    },
+    {
+     "field": "units",
+     "title": "Phones out of 100"
+    }
+   ]
+  }
+ }
+}

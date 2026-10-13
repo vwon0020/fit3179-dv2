@@ -1,0 +1,206 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "description": "Chart 8 - Multi-line chart: operating systems on Australian desktops and laptops, yearly average 2012-2026 (StatCounter). Hover for exact values.",
+ "width": 330,
+ "height": 280,
+ "data": {
+  "url": "data/au_desktop_os_monthly.csv",
+  "format": {
+   "type": "csv",
+   "parse": {
+    "share": "number"
+   }
+  }
+ },
+ "transform": [
+  {
+   "filter": "datum.os !== 'Other'"
+  },
+  {
+   "calculate": "toNumber(substring(datum.date, 0, 4))",
+   "as": "year"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "mean",
+     "field": "share",
+     "as": "share"
+    }
+   ],
+   "groupby": [
+    "year",
+    "os"
+   ]
+  }
+ ],
+ "encoding": {
+  "x": {
+   "field": "year",
+   "type": "quantitative",
+   "title": null,
+   "axis": {
+    "format": "d",
+    "values": [
+     2012,
+     2016,
+     2020,
+     2024,
+     2026
+    ],
+    "grid": false
+   }
+  },
+  "y": {
+   "field": "share",
+   "type": "quantitative",
+   "title": "Share of computers (%)",
+   "scale": {
+    "domain": [
+     0,
+     100
+    ]
+   },
+   "axis": {
+    "tickCount": 5
+   }
+  },
+  "color": {
+   "field": "os",
+   "type": "nominal",
+   "legend": null,
+   "scale": {
+    "domain": [
+     "Windows",
+     "macOS",
+     "Linux",
+     "Chrome OS"
+    ],
+    "range": [
+     "#3a7bd5",
+     "#2f3237",
+     "#d08a00",
+     "#129a6b"
+    ]
+   }
+  }
+ },
+ "layer": [
+  {
+   "mark": {
+    "type": "line",
+    "strokeWidth": 3,
+    "interpolate": "monotone"
+   }
+  },
+  {
+   "params": [
+    {
+     "name": "osHover",
+     "select": {
+      "type": "point",
+      "fields": [
+       "year"
+      ],
+      "nearest": true,
+      "on": "pointerover",
+      "clear": "pointerout"
+     }
+    }
+   ],
+   "mark": {
+    "type": "point",
+    "filled": true,
+    "size": 50
+   },
+   "encoding": {
+    "opacity": {
+     "condition": {
+      "param": "osHover",
+      "empty": false,
+      "value": 1
+     },
+     "value": 0
+    },
+    "tooltip": [
+     {
+      "field": "year",
+      "title": "Year"
+     },
+     {
+      "field": "os",
+      "title": "System"
+     },
+     {
+      "field": "share",
+      "title": "Share (%)",
+      "format": ".1f"
+     }
+    ]
+   }
+  },
+  {
+   "transform": [
+    {
+     "filter": "datum.year === 2026 && (datum.os === 'Windows' || datum.os === 'macOS')"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 6,
+    "fontSize": 12,
+    "fontWeight": 600
+   },
+   "encoding": {
+    "text": {
+     "field": "os"
+    }
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "year": 2012.3,
+      "share": 53,
+      "label": "macOS climbs from 1 in 6"
+     },
+     {
+      "year": 2012.3,
+      "share": 46,
+      "label": "to about 1 in 3 computers"
+     },
+     {
+      "year": 2026.3,
+      "share": 8,
+      "label": "Linux, Chrome OS"
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "fontSize": 11.5,
+    "fontStyle": "italic",
+    "color": "#5b6470"
+   },
+   "encoding": {
+    "x": {
+     "field": "year",
+     "type": "quantitative"
+    },
+    "y": {
+     "field": "share",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "label"
+    },
+    "color": {
+     "value": "#5b6470"
+    }
+   }
+  }
+ ]
+}

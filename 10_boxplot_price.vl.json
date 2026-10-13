@@ -1,0 +1,202 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "description": "Chart 10 - Box plot: US launch price of phone models by brand, 2019-2025 (Mobiles Dataset 2025). Brands are sorted by median price.",
+ "width": 530,
+ "height": 430,
+ "data": {
+  "url": "data/phones_specs.csv",
+  "format": {
+   "type": "csv",
+   "parse": {
+    "year": "number",
+    "weight_g": "number",
+    "ram_gb": "number",
+    "front_mp": "number",
+    "main_mp": "number",
+    "battery_mah": "number",
+    "screen_in": "number",
+    "price_usd": "number"
+   }
+  }
+ },
+ "transform": [
+  {
+   "filter": "datum.year >= 2019"
+  }
+ ],
+ "layer": [
+  {
+   "data": {
+    "values": [
+     {
+      "x": 999
+     }
+    ]
+   },
+   "mark": {
+    "type": "rule",
+    "strokeDash": [
+     4,
+     3
+    ],
+    "color": "#5b6470"
+   },
+   "encoding": {
+    "x": {
+     "field": "x",
+     "type": "quantitative"
+    }
+   }
+  },
+  {
+   "mark": {
+    "type": "boxplot",
+    "extent": "min-max",
+    "size": 16,
+    "median": {
+     "color": "#ffffff",
+     "strokeWidth": 2
+    },
+    "rule": {
+     "color": "#8a8578"
+    },
+    "ticks": {
+     "color": "#8a8578"
+    }
+   },
+   "encoding": {
+    "y": {
+     "field": "brand",
+     "type": "nominal",
+     "sort": [
+      "Sony",
+      "Apple",
+      "Huawei",
+      "Samsung",
+      "Google",
+      "OnePlus",
+      "Honor",
+      "Oppo",
+      "Vivo",
+      "Motorola",
+      "Xiaomi",
+      "Tecno",
+      "Realme",
+      "Lenovo",
+      "Infinix",
+      "Nokia"
+     ],
+     "title": null,
+     "axis": {
+      "domain": false,
+      "ticks": false,
+      "labelFontWeight": 600
+     }
+    },
+    "x": {
+     "field": "price_usd",
+     "type": "quantitative",
+     "title": "US launch price of each model (US$)",
+     "scale": {
+      "domain": [
+       0,
+       1900
+      ]
+     },
+     "axis": {
+      "format": "$,d",
+      "values": [
+       0,
+       250,
+       500,
+       750,
+       1000,
+       1250,
+       1500,
+       1750
+      ]
+     }
+    },
+    "color": {
+     "field": "brand",
+     "type": "nominal",
+     "legend": null,
+     "scale": {
+      "domain": [
+       "Apple",
+       "Samsung",
+       "Google",
+       "Oppo",
+       "Motorola",
+       "Huawei",
+       "Xiaomi",
+       "Vivo",
+       "Honor",
+       "Realme",
+       "OnePlus",
+       "Tecno",
+       "Infinix",
+       "Sony",
+       "Nokia",
+       "Lenovo"
+      ],
+      "range": [
+       "#2f3237",
+       "#1f4fd1",
+       "#e3a008",
+       "#129a6b",
+       "#7b4fc9",
+       "#c8102e",
+       "#ff6a13",
+       "#41a6e8",
+       "#e86a92",
+       "#9c8b2e",
+       "#8f2d56",
+       "#0f9d9a",
+       "#6fcfbf",
+       "#8a94a6",
+       "#5d8c7a",
+       "#9d9d6e"
+      ]
+     }
+    },
+    "tooltip": [
+     {
+      "field": "brand",
+      "title": "Brand"
+     }
+    ]
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "x": 1010,
+      "label": "US$999: typical iPhone"
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "baseline": "bottom",
+    "dy": -4,
+    "fontSize": 11,
+    "color": "#5b6470"
+   },
+   "encoding": {
+    "x": {
+     "field": "x",
+     "type": "quantitative"
+    },
+    "y": {
+     "value": 430
+    },
+    "text": {
+     "field": "label"
+    }
+   }
+  }
+ ]
+}

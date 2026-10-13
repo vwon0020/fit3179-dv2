@@ -1,0 +1,178 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "description": "Chart 7 - Calendar heatmap: gap between phone and desktop/laptop share of web browsing in Australia, every month 2012-2026 (StatCounter). Orange = phones ahead, blue = computers ahead.",
+ "width": 430,
+ "height": 360,
+ "data": {
+  "url": "data/au_platform_monthly.csv",
+  "format": {
+   "type": "csv",
+   "parse": {
+    "Desktop": "number",
+    "Mobile": "number",
+    "Tablet": "number"
+   }
+  }
+ },
+ "transform": [
+  {
+   "calculate": "toNumber(substring(datum.Date, 0, 4))",
+   "as": "year"
+  },
+  {
+   "calculate": "toNumber(substring(datum.Date, 5, 7))",
+   "as": "month"
+  },
+  {
+   "calculate": "['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][datum.month - 1]",
+   "as": "monthName"
+  },
+  {
+   "calculate": "datum.Mobile - datum.Desktop",
+   "as": "gap"
+  }
+ ],
+ "layer": [
+  {
+   "mark": {
+    "type": "rect",
+    "stroke": "#f7f5f0",
+    "strokeWidth": 1.5,
+    "cornerRadius": 2
+   },
+   "encoding": {
+    "x": {
+     "field": "monthName",
+     "type": "ordinal",
+     "sort": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+     ],
+     "title": null,
+     "axis": {
+      "orient": "top",
+      "domain": false,
+      "ticks": false,
+      "labelAngle": 0
+     }
+    },
+    "y": {
+     "field": "year",
+     "type": "ordinal",
+     "title": null,
+     "axis": {
+      "domain": false,
+      "ticks": false
+     }
+    },
+    "color": {
+     "field": "gap",
+     "type": "quantitative",
+     "title": [
+      "Phones minus computers",
+      "(percentage points)"
+     ],
+     "scale": {
+      "type": "linear",
+      "domain": [
+       -60,
+       0,
+       20
+      ],
+      "range": [
+       "#2b5d9e",
+       "#f2efe8",
+       "#e0601f"
+      ],
+      "clamp": true
+     },
+     "legend": {
+      "orient": "right",
+      "gradientLength": 220,
+      "values": [
+       -60,
+       -40,
+       -20,
+       0,
+       20
+      ],
+      "labelExpr": "datum.value > 0 ? '+' + datum.value : datum.value"
+     }
+    },
+    "tooltip": [
+     {
+      "field": "Date",
+      "title": "Month"
+     },
+     {
+      "field": "Mobile",
+      "title": "Phones (%)",
+      "format": ".1f"
+     },
+     {
+      "field": "Desktop",
+      "title": "Desktops & laptops (%)",
+      "format": ".1f"
+     },
+     {
+      "field": "Tablet",
+      "title": "Tablets (%)",
+      "format": ".1f"
+     },
+     {
+      "field": "gap",
+      "title": "Gap (points)",
+      "format": "+.1f"
+     }
+    ]
+   }
+  },
+  {
+   "transform": [
+    {
+     "filter": "datum.gap > 0"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "text": "\u25b2",
+    "fontSize": 9,
+    "color": "#ffffff"
+   },
+   "encoding": {
+    "x": {
+     "field": "monthName",
+     "type": "ordinal",
+     "sort": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+     ]
+    },
+    "y": {
+     "field": "year",
+     "type": "ordinal"
+    }
+   }
+  }
+ ]
+}

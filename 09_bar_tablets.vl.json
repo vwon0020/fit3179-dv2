@@ -1,0 +1,134 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "description": "Chart 9 - 100% stacked bar chart: tablet brands used in Australia, yearly average 2015-2026 (StatCounter).",
+ "width": 340,
+ "height": 280,
+ "data": {
+  "url": "data/au_tablet_monthly.csv",
+  "format": {
+   "type": "csv",
+   "parse": {
+    "share": "number"
+   }
+  }
+ },
+ "transform": [
+  {
+   "calculate": "indexof(['Apple','Samsung'], datum.brand) >= 0 ? datum.brand : 'Others'",
+   "as": "brandGroup"
+  },
+  {
+   "calculate": "toNumber(substring(datum.date, 0, 4))",
+   "as": "year"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "sum",
+     "field": "share",
+     "as": "monthShare"
+    }
+   ],
+   "groupby": [
+    "date",
+    "year",
+    "brandGroup"
+   ]
+  },
+  {
+   "aggregate": [
+    {
+     "op": "mean",
+     "field": "monthShare",
+     "as": "share"
+    }
+   ],
+   "groupby": [
+    "year",
+    "brandGroup"
+   ]
+  },
+  {
+   "calculate": "indexof(['Apple','Samsung','Others'], datum.brandGroup)",
+   "as": "ord"
+  }
+ ],
+ "layer": [
+  {
+   "mark": {
+    "type": "bar",
+    "width": {
+     "band": 0.75
+    }
+   },
+   "encoding": {
+    "x": {
+     "field": "year",
+     "type": "ordinal",
+     "title": null,
+     "axis": {
+      "labelAngle": -45,
+      "domain": false,
+      "ticks": false
+     }
+    },
+    "y": {
+     "field": "share",
+     "type": "quantitative",
+     "stack": "normalize",
+     "title": "Share of tablets",
+     "axis": {
+      "format": "%",
+      "values": [
+       0,
+       0.25,
+       0.5,
+       0.75,
+       1
+      ]
+     }
+    },
+    "color": {
+     "field": "brandGroup",
+     "type": "nominal",
+     "title": null,
+     "scale": {
+      "domain": [
+       "Apple",
+       "Samsung",
+       "Others"
+      ],
+      "range": [
+       "#2f3237",
+       "#1f4fd1",
+       "#cfc9bc"
+      ]
+     },
+     "legend": {
+      "orient": "top",
+      "direction": "horizontal"
+     }
+    },
+    "order": {
+     "field": "ord",
+     "type": "quantitative"
+    },
+    "tooltip": [
+     {
+      "field": "year",
+      "title": "Year"
+     },
+     {
+      "field": "brandGroup",
+      "title": "Brand"
+     },
+     {
+      "field": "share",
+      "title": "Share of tablets (%)",
+      "format": ".1f"
+     }
+    ]
+   }
+  }
+ ]
+}

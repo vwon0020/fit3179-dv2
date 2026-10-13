@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Who's in Your Pocket? | Consumer electronics in Australia and the world</title>
+  <meta name="description" content="A data story about the phones, tablets and computers Australians choose, compared with the rest of the world. FIT3179 Data Visualisation 2.">
+  <meta name="author" content="Vanessa Wong">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preload" href="fonts/SpaceGrotesk-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/IBMPlexSans-400.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="lib/vega.min.js"></script>
+  <script src="lib/vega-lite.min.js"></script>
+  <script src="lib/vega-embed.min.js"></script>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">Consumer electronics · A data story</p>
+    <h1>Who's in your<br>pocket<span>?</span></h1>
+    <p class="lede">Australians are among the most loyal iPhone users on Earth. This story maps the phones the world carries, then zooms in on Australia: the brands we pick, the screens we use, and what our money actually buys.</p>
+    <p class="byline">By <b>Vanessa Wong</b> · FIT3179 Data Visualisation 2, Monash University · Published 13 October 2026 · Data up to September 2026</p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="num">61% <small>vs 31%</small></div>
+        <p>of phones used in Australia are <span class="b b-apple">iPhones</span>, about twice the world average.</p>
+      </div>
+      <div class="stat">
+        <div class="num">113 <small>vs 112</small></div>
+        <p>countries and territories where <span class="b b-samsung">Samsung</span> is the No. 1 phone brand, against 112 for <span class="b b-apple">Apple</span>.</p>
+      </div>
+      <div class="stat">
+        <div class="num">48.5% <small>vs 48.6%</small></div>
+        <p>of Australian web browsing in September 2026 came from phones, compared with desktops and laptops. It is almost a dead heat.</p>
+      </div>
+    </div>
+
+    <div class="howto">
+      <p><strong>How the numbers are measured.</strong> Brand "share" in this story is the share of all web pages viewed from each brand's devices, as counted by StatCounter on more than 1.5 million websites. It shows which devices people <em>actually use</em>, not how many were sold that year. Hover over any chart to see exact values. Where a chart has a menu or a clickable legend, use it to highlight one group.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================== CHAPTER 1 – THE WORLD ============================== -->
+<section class="chapter" id="world">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">01</div>
+        <p class="kicker">The world</p>
+      </div>
+      <div>
+        <h2>A planet split between two brands</h2>
+        <p class="lede">Across most of the world, the phone in your pocket is either an <span class="b b-apple">Apple</span> or a <span class="b b-samsung">Samsung</span>. Which one depends heavily on where you live.</p>
+      </div>
+    </div>
+
+    <figure class="card">
+      <header>
+        <span class="tag">Map 1 · Categorical choropleth</span>
+        <h3>The most-used phone brand in each country</h3>
+        <p>Apple leads in North America, Western Europe, Japan and Australia. Samsung leads across much of Latin America, Eastern Europe, Africa and the Middle East. Click a brand in the legend to see only the countries it leads.</p>
+      </header>
+      <div class="chart" data-spec="specs/01_map_leader.vl.json"></div>
+      <figcaption><span>Source: StatCounter Global Stats, mobile vendor market share, average of Oct 2025 to Sep 2026. Grey = no data. Equal Earth projection.</span><a href="specs/01_map_leader.vl.json">Spec (JSON)</a></figcaption>
+    </figure>
+
+    <div class="split" style="margin-bottom:24px">
+      <div class="text">
+        <h3>Money talks</h3>
+        <p>iPhones cost more than most Android phones, so richer countries tend to have more of them.</p>
+      </div>
+      <div class="text">
+        <p>The map below combines two measures: the <strong>iPhone share</strong> of phones in use (StatCounter) and <strong>GDP per person</strong>, which is the value a country produces each year divided by its population (World Bank). Dark plum countries, like <strong>Australia</strong>, are rich <em>and</em> iPhone-heavy. Teal countries are rich but prefer other brands. Pink countries choose iPhones despite lower incomes.</p>
+        <div class="callout"><p><strong>Look for:</strong> South Korea, home of Samsung, is rich but only 31% iPhone. National loyalty can beat income.</p></div>
+      </div>
+    </div>
+    <figure class="card" style="margin-bottom:36px">
+      <header>
+        <span class="tag">Map 2 · Bivariate choropleth</span>
+        <h3>Rich countries use more iPhones, with a few exceptions</h3>
+        <p>Hover a square in the key to light up the countries in that group.</p>
+      </header>
+      <div class="chart" data-spec="specs/02_map_bivariate.vl.json"></div>
+      <figcaption><span>Sources: StatCounter (Oct 2025 to Sep 2026); World Bank, GDP per capita in current US$ (latest year, mostly 2025).</span><a href="specs/02_map_bivariate.vl.json">Spec (JSON)</a></figcaption>
+    </figure>
+
+    <figure class="card">
+      <header>
+        <span class="tag">Map 3 · Proportional symbol map</span>
+        <h3>Where the next billion phones are, and who sells them</h3>
+        <p>Each circle's area shows a country's mobile phone subscriptions. Its colour shows which brand group has the biggest share there. Apple dominates rich markets, but the world's largest markets, China and India, run mostly on <span class="b b-xiaomi">Chinese brands</span> such as Xiaomi, Vivo and Oppo. Across Africa, <span class="b b-transsion">Transsion</span>'s low-cost Tecno and Infinix phones lead. Use the menu to highlight one group.</p>
+      </header>
+      <div class="chart" data-spec="specs/03_map_symbols.vl.json"></div>
+      <figcaption><span>Sources: World Bank / International Telecommunication Union, mobile cellular subscriptions (2024); StatCounter, brand share Oct 2025 to Sep 2026. "Chinese brands" = Xiaomi, Oppo, Vivo, Huawei, Honor, Realme, OnePlus, ZTE, Meizu, Lenovo, TCL.</span><a href="specs/03_map_symbols.vl.json">Spec (JSON)</a></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- CHAPTER 2 AUSTRALIA -->
+<section class="chapter" id="australia">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">02</div>
+        <p class="kicker">Australia</p>
+      </div>
+      <div>
+        <h2>An iPhone nation</h2>
+        <p class="lede">If you lined up 100 Australians and checked their phones, about 61 would be holding an iPhone. Worldwide, only about 31 would. Chinese brands, which make up about a quarter of phones in use worldwide, barely register here.</p>
+      </div>
+    </div>
+
+    <figure class="card">
+      <header>
+        <span class="tag">Chart 4 · Waffle chart (small multiples)</span>
+        <h3>Australia versus the world, 100 phones each</h3>
+        <p>Each phone icon is one in every hundred phones in use. Hover a brand to compare it across both groups.</p>
+      </header>
+      <div class="chart" data-spec="specs/04_waffle_au_world.vl.json"></div>
+      <figcaption><span>Source: StatCounter Global Stats, average of Oct 2025 to Sep 2026, rounded to whole phones. "All other brands" includes unidentified devices.</span><a href="specs/04_waffle_au_world.vl.json">Spec (JSON)</a></figcaption>
+    </figure>
+
+    <figure class="card" style="margin-top:36px">
+      <header>
+        <span class="tag">Chart 5 · Ridgeline plot</span>
+        <h3>Behind Apple and Samsung, challengers rise and fall</h3>
+        <p>Each ridge shows one brand's share of phones in use in Australia, month by month, all on the same scale. Old names like <strong>HTC</strong> and <strong>Nokia</strong> faded away early. <span class="b b-huawei">Huawei</span> grew fast until the May 2019 US trade ban cut its new phones off from Google apps, and then collapsed. <span class="b b-google">Google</span>'s Pixel is the newest climber. Hover a ridge for exact values.</p>
+      </header>
+      <div class="chart" data-spec="specs/05_ridgeline_au.vl.json"></div>
+      <figcaption><span>Source: StatCounter Global Stats, mobile vendor market share in Australia, monthly, Jan 2012 to Sep 2026. Each ridge tops out at 12%; Google's one-month spike to 22.5% (Aug 2025) is clipped.</span><a href="specs/05_ridgeline_au.vl.json">Spec (JSON)</a></figcaption>
+    </figure>
+
+    <div class="split" style="margin-bottom:20px">
+      <div class="text"><h3>The podium rarely changes</h3></div>
+      <div class="text">
+        <p>Ranking brands by their average share each year shows how stable the top spots are. <span class="b b-apple">Apple</span> has been No. 1 and <span class="b b-samsung">Samsung</span> No. 2 every year since 2012. The fight is for third place: HTC held it in 2012, Huawei in 2020 and <span class="b b-google">Google</span> in 2026.</p>
+      </div>
+    </div>
+    <figure class="card">
+      <header>
+        <span class="tag">Chart 6 · Bump chart</span>
+        <h3>Who ranks where in Australia, year by year</h3>
+        <p>Hover a line to follow one brand.</p>
+      </header>
+      <div class="chart" data-spec="specs/06_bump_au.vl.json"></div>
+      <figcaption><span>Source: StatCounter, yearly average of monthly share. Top 8 of the 12 tracked brands (2026 = Jan to Sep).</span><a href="specs/06_bump_au.vl.json">Spec (JSON)</a></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================== CHAPTER 3 – BEYOND THE PHONE ============================== -->
+<section class="chapter" id="screens">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">03</div>
+        <p class="kicker">Beyond the phone</p>
+      </div>
+      <div>
+        <h2>From the desk to the pocket</h2>
+        <p class="lede">In 2012, nine in ten web pages Australians viewed were on a desktop or laptop. Today phones and computers are neck and neck, and the brand loyalty we show for phones carries over to tablets and laptops.</p>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="text">
+        <h3>A slow, seesawing takeover</h3>
+        <p>Each square is one month. <strong style="color:#2b5d9e">Blue</strong> means computers were ahead and <strong style="color:#c4501a">orange</strong> means phones were ahead. White triangles mark the months when phones won.</p>
+        <p>The gap closed steadily until 2019. Phones first won in December 2019, then COVID-19 lockdowns and working from home pushed browsing back to laptops. Phones led again in most months from January to August 2025. In September 2026 the two were just 0.05 points apart.</p>
+      </div>
+      <figure class="card">
+        <header>
+          <span class="tag">Chart 7 · Calendar heatmap</span>
+          <h3>Phones versus computers for web browsing in Australia, every month</h3>
+        </header>
+        <div class="chart" data-spec="specs/07_heatmap_platform.vl.json"></div>
+        <figcaption><span>Source: StatCounter Global Stats, desktop vs mobile vs tablet market share, Australia, Jan 2012 to Sep 2026.</span><a href="specs/07_heatmap_platform.vl.json">Spec (JSON)</a></figcaption>
+      </figure>
+    </div>
+
+    <div class="pair">
+      <figure class="card">
+        <header>
+          <span class="tag">Chart 8 · Line chart</span>
+          <h3>Macs now run one in three Australian computers</h3>
+          <p>The share of desktops and laptops running macOS doubled from 16% in 2012 to 32%. Windows still leads.</p>
+        </header>
+        <div class="chart" data-spec="specs/08_line_desktop_os.vl.json"></div>
+        <figcaption><span>Source: StatCounter, desktop OS market share, Australia (yearly average; "macOS" includes older OS X).</span><a href="specs/08_line_desktop_os.vl.json">Spec (JSON)</a></figcaption>
+      </figure>
+      <figure class="card">
+        <header>
+          <span class="tag">Chart 9 · 100% stacked bar chart</span>
+          <h3>Four in five tablets are iPads</h3>
+          <p>Samsung has made gains since 2020, but Apple's yearly share of Australian tablets has never dropped below 76%.</p>
+        </header>
+        <div class="chart" data-spec="specs/09_bar_tablets.vl.json"></div>
+        <figcaption><span>Source: StatCounter, tablet vendor market share, Australia (yearly average, 2026 = Jan to Sep).</span><a href="specs/09_bar_tablets.vl.json">Spec (JSON)</a></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- CHAPTER 4 - SPECS & PRICES -->
+<section class="chapter" id="specs">
+  <div class="wrap">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">04</div>
+        <p class="kicker">Specs &amp; prices</p>
+      </div>
+      <div>
+        <h2>What does your money buy?</h2>
+        <p class="lede">If Australians mostly buy the dearest brand, do they get better hardware? A catalogue of 752 phones launched between 2019 and 2025 suggests the answer is "not on paper".</p>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="text">
+        <h3>The price ladder</h3>
+        <p>Each box shows the middle half of a brand's launch prices. The white line is the <strong>median</strong>, the middle price when all models are lined up from cheapest to dearest. The whiskers reach the cheapest and dearest models.</p>
+        <p>The median <span class="b b-apple">Apple</span> phone launched at <strong>US$999</strong>, against US$799 for <span class="b b-samsung">Samsung</span>, US$449 for <span class="b b-oppo">Oppo</span> and just US$199 for <span class="b b-transsion">Infinix</span>, the budget brand that leads in parts of Africa.</p>
+        <p style="font-size:14px;color:var(--muted)">Prices are US launch prices, the only currency the dataset lists consistently. Australian prices are usually higher.</p>
+      </div>
+      <figure class="card">
+        <header>
+          <span class="tag">Chart 10 · Box plot</span>
+          <h3>Launch price of every model, by brand</h3>
+        </header>
+        <div class="chart" data-spec="specs/10_boxplot_price.vl.json"></div>
+        <figcaption><span>Source: Mobiles Dataset (2025), Kaggle (abdulmalik1518). Phones with screens up to 7 inches, launched 2019 to 2025.</span><a href="specs/10_boxplot_price.vl.json">Spec (JSON)</a></figcaption>
+      </figure>
+    </div>
+
+    <div class="split">
+      <div class="text">
+        <h3>Batteries got bigger, fast</h3>
+        <p>A violin plot is a box plot that shows its shape. The wider the orange shape, the more phones launched with that battery size. The black tick marks the median.</p>
+        <p>In 2019 only 5% of new models had a 5,000 mAh battery or larger (mAh measures how much charge a battery holds). By 2024, 79% did. This is one spec where the whole market moved together.</p>
+      </div>
+      <figure class="card">
+        <header>
+          <span class="tag">Chart 11 · Violin plot</span>
+          <h3>Battery capacity of new phones by launch year</h3>
+        </header>
+        <div class="chart" data-spec="specs/11_violin_battery.vl.json"></div>
+        <figcaption><span>Source: Mobiles Dataset (2025), Kaggle. 2025 omitted (only 12 models). Hover for model counts.</span><a href="specs/11_violin_battery.vl.json">Spec (JSON)</a></figcaption>
+      </figure>
+    </div>
+
+    <figure class="card">
+      <header>
+        <span class="tag">Chart 12 · Parallel coordinates</span>
+        <h3>The typical phone of each brand, compared across seven specifications</h3>
+        <p>Each grey line is one brand's median phone. Each vertical axis runs from the lowest brand median (bottom) to the highest (top). The highlighted <span class="b b-apple">Apple</span> line is near the top for price and at the top for weight, but at the bottom for battery, screen size and main-camera megapixels. Australians are paying for the brand, its software and its long update support, not the spec sheet. Use the menu to compare another brand.</p>
+      </header>
+      <div class="chart" data-spec="specs/12_parallel_specs.vl.json"></div>
+      <figcaption><span>Source: Mobiles Dataset (2025), Kaggle. Median of all models per brand, 2019 to 2025. Megapixels (MP) count camera pixels and do not fully describe photo quality.</span><a href="specs/12_parallel_specs.vl.json">Spec (JSON)</a></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- TAKEAWAYS -->
+<section class="chapter" id="takeaways">
+  <div class="wrap">
+    <p class="kicker">So what?</p>
+    <h2>Three things to take away</h2>
+    <div class="takeaways">
+      <div class="card">
+        <div class="num">1</div>
+        <h3>Australia is an outlier</h3>
+        <p>We use iPhones at twice the global rate. In this respect we look more like the USA and Japan than our Asian neighbours, where Chinese brands are strong.</p>
+      </div>
+      <div class="card">
+        <div class="num">2</div>
+        <h3>Loyalty spans devices</h3>
+        <p>Our Apple habit extends to tablets (around 80% iPads) and increasingly to computers, where Mac use has doubled since 2012.</p>
+      </div>
+      <div class="card">
+        <div class="num">3</div>
+        <h3>We pay for the brand</h3>
+        <p>On paper, Apple phones cost the most but rank near the bottom for battery and camera megapixels. Value for money means different things to different buyers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <h2>About this visualisation</h2>
+    <div class="cols">
+      <div>
+        <h3>Data sources</h3>
+        <ol>
+          <li><strong>StatCounter Global Stats</strong>: mobile vendor, tablet vendor, desktop OS and platform market share for Australia and 249 countries and territories, Jan 2012 to Sep 2026. Licensed CC BY-SA 3.0. <a href="https://gs.statcounter.com/vendor-market-share/mobile/australia">gs.statcounter.com</a></li>
+          <li><strong>World Bank, World Development Indicators</strong>: GDP per capita (current US$), population, and mobile cellular subscriptions (data from the International Telecommunication Union). Downloaded through the World Bank API on 13 Oct 2026. Licensed CC BY 4.0. <a href="https://data.worldbank.org/indicator/IT.CEL.SETS">data.worldbank.org</a></li>
+          <li><strong>Mobiles Dataset (2025)</strong> by Kaggle user abdulmalik1518: specifications and launch prices of 930 phone models, 2014 to 2025. <a href="https://www.kaggle.com/datasets/abdulmalik1518/mobiles-dataset-2025">kaggle.com</a></li>
+          <li><strong>Natural Earth / world-atlas</strong>: country boundaries (1:110m TopoJSON) by Mike Bostock. <a href="https://github.com/topojson/world-atlas">github.com/topojson/world-atlas</a></li>
+          <li><strong>ISO 3166 country codes</strong>, used to join the datasets: <a href="https://github.com/lukes/ISO-3166-Countries-with-Regional-Codes">lukes/ISO-3166-Countries-with-Regional-Codes</a></li>
+        </ol>
+      </div>
+      <div>
+        <h3>Author &amp; notes</h3>
+        <p><strong style="color:#fff">Vanessa Wong</strong>, FIT3179 Data Visualisation, Monash University. Published 13 October 2026.</p>
+        <p>Built with <a href="https://vega.github.io/vega-lite/">Vega-Lite 5</a>. Typefaces: Space Grotesk and IBM Plex (SIL Open Font License). Every chart's JSON specification is in the <code>specs/</code> folder of this repository, and the data-preparation script is in <code>prep/</code>.</p>
+        <p>Brand shares measure web page views, not sales. Places where no single brand reaches 10% (mostly tiny territories with little data) are shown as "no data". "Chinese brands" includes Xiaomi (with POCO), Oppo, Vivo (with iQOO), Huawei, Honor, Realme, OnePlus, ZTE, Meizu, Lenovo and TCL.</p>
+        <p><strong style="color:#fff">AI acknowledgement:</strong> Generative AI (Claude, Anthropic) was used to help collect and prepare the data, write the Vega-Lite code and page layout, and edit the text for grammar and style. All data comes from the cited public sources and was not altered.</p>
+        <p>Text and charts © 2026 Vanessa Wong, released under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+    <p class="meta">Who's in Your Pocket? v1.0 13 Oct 2026</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
